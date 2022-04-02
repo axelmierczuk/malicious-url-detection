@@ -82,6 +82,8 @@ class Train:
 
         model, sgd, cb = self.build_model()
 
+        tf.keras.utils.plot_model(model, to_file=self.parent_dir + "network.png", show_shapes=True, show_layer_names=True)
+
         model.compile(
             loss='mean_squared_error',
             optimizer=sgd,
