@@ -5,6 +5,7 @@ from train.ResNet_v2_2DCNN import ResNetv2
 from tensorflow.keras.optimizers import SGD
 from preprocess.format import PProcess
 from util.util import TYPE
+import visualkeras
 
 
 def decay(epoch):
@@ -17,7 +18,7 @@ def decay(epoch):
 
 
 class Train:
-    def __init__(self, b, w=175):
+    def __init__(self, b, w=175, is_loaded=False):
         # # Hyper Parameters
         # self.input_dimension = 11
         self.learning_rate = 0.00001
@@ -37,7 +38,8 @@ class Train:
 
         # Start working
         self.processed = PProcess(self.batch_size, self.tensor_width)
-        self.model = self.train()
+        if not is_loaded:
+            self.model = self.train()
 
     def build_model(self):
         """
@@ -82,7 +84,7 @@ class Train:
 
         model, sgd, cb = self.build_model()
 
-        tf.keras.utils.plot_model(model, to_file=self.parent_dir + "network.png", show_shapes=True, show_layer_names=True)
+        visualkeras.layered_view(model, legend=True, to_file=self.parent_dir + 'model.png')
 
         model.compile(
             loss='mean_squared_error',

@@ -2,25 +2,29 @@ import tensorflow as tf
 import numpy as np
 import json
 from util.util import TYPE
+from preprocess.format import PProcess
 
 
 class Evaluate:
-    def __init__(self, trained):
-        self.model = trained.model
-        self.test = trained.processed.generator(TYPE.test)
-        self.processed = trained.processed
-        self.batch_size = self.processed.batch_size
-
-        self.labels = np.array([])
+    def __init__(self, trained=None):
+        if trained is None:
+            self.model = tf.keras.models.load_model('../model/saved-model/')
+            self.processed = PProcess(8, 175, True)
+        else:
+            self.model = trained.model
+            self.processed = trained.processed
 
         self.HP = 0.85
         self.MP = 0.725
         self.LP = 0.65
 
+        self.test = self.processed.generator(TYPE.test)
+        self.batch_size = self.processed.batch_size
+        self.labels = np.array([])
         self.predictions = self.evaluate()
         self.stats = self.stats()
 
-        with open('model/data.json', 'w', encoding='utf-8') as f:
+        with open('../model/data.json' if trained is None else 'model/data.json', 'w', encoding='utf-8') as f:
             json.dump(self.stats, f, ensure_ascii=False, indent=4)
 
     def stats(self):
@@ -31,7 +35,7 @@ class Evaluate:
             'total-malicious': len(mal_index),
             'false-positive': {
                 'total': {
-                    "comment": "The model is claims that a URL is malicious, when it is not.",
+                    "comment": "The model claims that a URL is malicious, when it is not.",
                     'count': 0,
                     'percentage': 0.0
                 },
@@ -53,7 +57,7 @@ class Evaluate:
             },
             'false-negative': {
                 'total': {
-                    "comment": "The model is claims that a URL is benign, when it is not.",
+                    "comment": "The model claims that a URL is benign, when it is not.",
                     'count': 0,
                     'percentage': 0.0
                 },
@@ -129,3 +133,7 @@ class Evaluate:
         res = res.reshape((len(self.processed.data[TYPE.test]) // self.batch_size) * self.batch_size, 2)
         print("test loss, test acc:", results)
         return res
+
+
+if __name__ == "__main__":
+    Evaluate()
