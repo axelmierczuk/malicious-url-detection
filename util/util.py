@@ -1,7 +1,22 @@
+import os
+
+
 class TYPE:
     train: str = "train"
     validation: str = "validation"
     test: str = "test"
+
+
+class Models:
+    lexicographical: str = "lex"
+    raw: str = "raw"
+    all: str = "all"
+
+    def __init__(self, arg):
+        if arg == Models.all:
+            self.current_models = [Models.lexicographical, Models.raw]
+        else:
+            self.current_models = [arg]
 
 obj = {
     0: [0, 0, 0, 0, 0, 0, 0],
@@ -137,3 +152,15 @@ obj = {
 
 def get_characters():
     return obj
+
+
+def get_args():
+    return [Models.all, Models.raw, Models.lexicographical]
+
+
+def get_save_loc(m):
+    f = "models/" + m + "/"
+    is_f = os.path.isdir(f)
+    if not is_f:
+        os.makedirs(f)
+    return f

@@ -1,15 +1,17 @@
 import tensorflow as tf
 import numpy as np
 import json
-from util.util import TYPE
+from util.util import TYPE, get_save_loc
 from preprocess.format import PProcess
+from tqdm import tqdm
 
 
 class Evaluate:
-    def __init__(self, trained=None):
+    def __init__(self, m, trained=None):
+        self.save_location = get_save_loc(m)
         if trained is None:
-            self.model = tf.keras.models.load_model('../model/saved-model/')
-            self.processed = PProcess(8, 175, True)
+            self.model = tf.keras.models.load_model(self.save_location + '/saved-model/')
+            self.processed = PProcess(8, 175)
         else:
             self.model = trained.model
             self.processed = trained.processed
@@ -24,7 +26,7 @@ class Evaluate:
         self.predictions = self.evaluate()
         self.stats = self.stats()
 
-        with open('../model/data.json' if trained is None else 'model/data.json', 'w', encoding='utf-8') as f:
+        with open(self.save_location + 'data.json', 'w', encoding='utf-8') as f:
             json.dump(self.stats, f, ensure_ascii=False, indent=4)
 
     def stats(self):
@@ -124,16 +126,14 @@ class Evaluate:
 
         res = np.array([])
         dataset = test_generator.enumerate()
+        pbar = tqdm(total=len(self.processed.data[TYPE.test]) // self.batch_size)
         for b in dataset.as_numpy_iterator():
             if b[0] >= len(self.processed.data[TYPE.test]) // self.batch_size:
                 break
             else:
+                pbar.update(1)
                 self.labels = np.append(self.labels, np.array([i[1] for i in b[1][1]]))
                 res = np.append(res, self.model.predict_step(b[1]))
         res = res.reshape((len(self.processed.data[TYPE.test]) // self.batch_size) * self.batch_size, 2)
         print("test loss, test acc:", results)
         return res
-
-
-if __name__ == "__main__":
-    Evaluate()

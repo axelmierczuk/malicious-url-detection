@@ -4,7 +4,7 @@ import tensorflow as tf
 from train.ResNet_v2_2DCNN import ResNetv2
 from tensorflow.keras.optimizers import SGD
 from preprocess.format import PProcess
-from util.util import TYPE
+from util.util import TYPE, get_save_loc
 import visualkeras
 
 
@@ -18,7 +18,7 @@ def decay(epoch):
 
 
 class Train:
-    def __init__(self, b, w=175, is_loaded=False):
+    def __init__(self, b, w, m):
         # # Hyper Parameters
         # self.input_dimension = 11
         self.learning_rate = 0.00001
@@ -34,12 +34,11 @@ class Train:
         self.output_nums = 2
         self.batch_size = b
         self.tensor_width = w
-        self.parent_dir = "model/"
+        self.save_location = get_save_loc(m)
 
         # Start working
         self.processed = PProcess(self.batch_size, self.tensor_width)
-        if not is_loaded:
-            self.model = self.train()
+        self.model = self.train()
 
     def build_model(self):
         """
@@ -52,11 +51,10 @@ class Train:
 
         # Optimizer
         sgd = SGD(learning_rate=self.learning_rate, momentum=self.momentum)
-        checkpoint_prefix = os.path.join(self.parent_dir + "checkpoints", "ckpt_{epoch}")
+        checkpoint_prefix = os.path.join(self.save_location + "checkpoints", "ckpt_{epoch}")
         callbacks = [
-            tf.keras.callbacks.experimental.BackupAndRestore(backup_dir=self.parent_dir + "backup"),
-            tf.keras.callbacks.TensorBoard(log_dir=self.parent_dir + f"logs/ResNet18-{int(time.time())}", write_graph=True,
-                                           write_steps_per_second=True, histogram_freq=1, update_freq='batch'),
+            tf.keras.callbacks.experimental.BackupAndRestore(backup_dir=self.save_location + "backup"),
+            tf.keras.callbacks.TensorBoard(log_dir=self.save_location + f"logs/{self.model_name}-{int(time.time())}", write_graph=True, write_steps_per_second=True, histogram_freq=1, update_freq='batch'),
             tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_prefix, save_weights_only=True),
             tf.keras.callbacks.LearningRateScheduler(decay),
         ]
@@ -84,7 +82,7 @@ class Train:
 
         model, sgd, cb = self.build_model()
 
-        visualkeras.layered_view(model, legend=True, to_file=self.parent_dir + 'model.png')
+        visualkeras.layered_view(model, legend=True, to_file=self.save_location + 'model.png')
 
         model.compile(
             loss='mean_squared_error',
@@ -99,10 +97,10 @@ class Train:
             workers=6,
             x=training_generator,
             batch_size=self.batch_size,
-            epochs=1,
+            epochs=100,
             validation_data=validation_generator,
             callbacks=cb
         )
-        model.save(self.parent_dir + 'url-model-saved/')
+        model.save(self.save_location + 'saved-model/')
 
         return model

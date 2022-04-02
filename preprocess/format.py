@@ -8,7 +8,7 @@ from util.util import get_characters, TYPE
 
 
 class PProcess:
-    def __init__(self, batch_size, tensor_root=175, is_loaded=False):
+    def __init__(self, batch_size, tensor_root=175):
         self.tensor_length = int(tensor_root * tensor_root / 7)
         self.tensor_root = tensor_root
         self.char_len = 7
@@ -17,7 +17,6 @@ class PProcess:
         self.split_train = 0.8
         self.split_val = 0.1
         self.batch_size = batch_size
-        self.parent_dir = "../" if is_loaded else ""
         self.test_labels = np.array([])
         self.data = self.preprocess()
 
@@ -53,8 +52,7 @@ class PProcess:
             df[k] = df[k].replace(v['id'], v['val'])
         if label != self.main_label:
             df = df.rename(columns={label: self.main_label})
-        print(f"Built {s.split('/')[-1]} dataframe: ")
-        print(df.head())
+        print(f"Built {s.split('/')[-1]} dataframe. ")
         return df
 
     def preprocess(self):
@@ -65,11 +63,11 @@ class PProcess:
         pd.options.display.max_rows = None
 
         # Dataset from https://www.sciencedirect.com/science/article/pii/S2352340920311987?via%3Dihub#ecom0001
-        test = self.build_df(self.parent_dir + 'data/Webpages_Classification_test_data.csv', {'label': {'id': ['good', 'bad'], 'val': [0, 1]}}, 'label')
-        train = self.build_df(self.parent_dir + 'data/Webpages_Classification_train_data.csv', {'label': {'id': ['good', 'bad'], 'val': [0, 1]}}, 'label')
+        test = self.build_df('data/Webpages_Classification_test_data.csv', {'label': {'id': ['good', 'bad'], 'val': [0, 1]}}, 'label')
+        train = self.build_df('data/Webpages_Classification_train_data.csv', {'label': {'id': ['good', 'bad'], 'val': [0, 1]}}, 'label')
 
         # Dataset from https://www.kaggle.com/datasets/sid321axn/malicious-urls-dataset
-        df = self.build_df(self.parent_dir + 'data/malicious_phish.csv', {'type': {'id': ['benign', 'phishing', 'defacement', 'malware'], 'val': [0, 1, 1, 1]}}, 'type')
+        df = self.build_df('data/malicious_phish.csv', {'type': {'id': ['benign', 'phishing', 'defacement', 'malware'], 'val': [0, 1, 1, 1]}}, 'type')
 
         df = df.append(test).append(train)
 
