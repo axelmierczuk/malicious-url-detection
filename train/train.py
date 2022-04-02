@@ -1,0 +1,104 @@
+import time
+import os
+import tensorflow as tf
+from train.ResNet_v2_2DCNN import ResNetv2
+from tensorflow.keras.optimizers import SGD
+from preprocess.format import PProcess
+from util.util import TYPE
+
+
+def decay(epoch):
+    if epoch < 3:
+        return 1e-3
+    elif 3 <= epoch < 7:
+        return 1e-4
+    else:
+        return 1e-5
+
+
+class Train:
+    def __init__(self, b, w=175):
+        # # Hyper Parameters
+        # self.input_dimension = 11
+        self.learning_rate = 0.00001
+        self.momentum = 0.85
+        # self.hidden_initializer = random_uniform(seed=123)
+        self.dropout_rate = 0.2
+
+        # Configurations
+        self.model_name = 'ResNeXt'
+        self.model_width = 16
+        self.num_channel = 1
+        self.problem_type = 'Classification'
+        self.output_nums = 2
+        self.batch_size = b
+        self.tensor_width = w
+        self.parent_dir = "model/"
+
+        # Start working
+        self.processed = PProcess(self.batch_size, self.tensor_width)
+        self.model = self.train()
+
+    def build_model(self):
+        """
+        Used to define model and optimizer.
+        """
+        # Model
+        model = ResNetv2(self.tensor_width, self.tensor_width, self.num_channel, self.model_width,
+                         problem_type=self.problem_type, output_nums=self.output_nums, pooling='max',
+                         dropout_rate=self.dropout_rate).ResNet18()
+
+        # Optimizer
+        sgd = SGD(learning_rate=self.learning_rate, momentum=self.momentum)
+        checkpoint_prefix = os.path.join(self.parent_dir + "checkpoints", "ckpt_{epoch}")
+        callbacks = [
+            tf.keras.callbacks.experimental.BackupAndRestore(backup_dir=self.parent_dir + "backup"),
+            tf.keras.callbacks.TensorBoard(log_dir=self.parent_dir + f"logs/ResNet18-{int(time.time())}", write_graph=True,
+                                           write_steps_per_second=True, histogram_freq=1, update_freq='batch'),
+            tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_prefix, save_weights_only=True),
+            tf.keras.callbacks.LearningRateScheduler(decay),
+        ]
+
+        return model, sgd, callbacks
+
+    def train(self):
+        """
+        Main training function. Takes a training dataframe and exports a saved model.
+        """
+        # Distributed Strategy
+        strategy = tf.distribute.MirroredStrategy()
+
+        # Generators
+        training_generator = tf.data.Dataset.from_generator(
+            generator=lambda: self.processed.generator(TYPE.train),
+            output_types=(tf.float32, tf.float32),
+            output_shapes=([self.batch_size, self.tensor_width, self.tensor_width], [None, 2])
+        )
+        validation_generator = tf.data.Dataset.from_generator(
+            generator=lambda: self.processed.generator(TYPE.validation),
+            output_types=(tf.float32, tf.float32),
+            output_shapes=([self.batch_size, self.tensor_width, self.tensor_width], [None, 2])
+        )
+
+        model, sgd, cb = self.build_model()
+
+        model.compile(
+            loss='mean_squared_error',
+            optimizer=sgd,
+            metrics=['accuracy']
+        )
+
+        model.fit(
+            steps_per_epoch=len(self.processed.data[TYPE.train].index) // self.batch_size,
+            validation_steps=len(self.processed.data[TYPE.validation].index) // self.batch_size,
+            use_multiprocessing=True,
+            workers=6,
+            x=training_generator,
+            batch_size=self.batch_size,
+            epochs=1,
+            validation_data=validation_generator,
+            callbacks=cb
+        )
+        model.save(self.parent_dir + 'url-model-saved/')
+
+        return model
