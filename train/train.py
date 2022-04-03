@@ -1,10 +1,11 @@
 import time
 import os
 import tensorflow as tf
-from train.ResNet_v2_2DCNN import ResNetv2
+
+from train.models.MnasNet_models import Build_MnasNet
 from tensorflow.keras.optimizers import SGD
 from preprocess.format import PProcess
-from util.util import TYPE, get_save_loc
+from util.util import TYPE, get_save_loc, Models
 import visualkeras
 
 
@@ -18,7 +19,7 @@ def decay(epoch):
 
 
 class Train:
-    def __init__(self, b, w, m):
+    def __init__(self, batch_size, size, name, epochs=100):
         # # Hyper Parameters
         # self.input_dimension = 11
         self.learning_rate = 0.00001
@@ -27,27 +28,48 @@ class Train:
         self.dropout_rate = 0.2
 
         # Configurations
-        self.model_name = 'ResNeXt'
+        self.model_name = name
         self.model_width = 16
         self.num_channel = 1
         self.problem_type = 'Classification'
         self.output_nums = 2
-        self.batch_size = b
-        self.tensor_width = w
-        self.save_location = get_save_loc(m)
-
+        self.batch_size = batch_size
+        self.tensor_width = size
+        self.save_location = get_save_loc(self.model_name)
+        self.epochs = epochs
         # Start working
         self.processed = PProcess(self.batch_size, self.tensor_width)
-        self.model = self.train()
+        self.processed.preprocess()
+        self.model = None
 
     def build_model(self):
         """
         Used to define model and optimizer.
         """
+
+        # Generators
+        training_generator = tf.data.Dataset.from_generator(
+            generator=lambda: self.processed.generator(TYPE.train, self.model_name),
+            output_types=(tf.float32, tf.float32),
+            output_shapes=(
+                [self.batch_size, self.tensor_width, self.tensor_width] if self.model_name == "raw" else [self.batch_size, self.tensor_width, 1],
+                [None, 2]
+            )
+        )
+        validation_generator = tf.data.Dataset.from_generator(
+            generator=lambda: self.processed.generator(TYPE.validation, self.model_name),
+            output_types=(tf.float32, tf.float32),
+            output_shapes=(
+                [self.batch_size, self.tensor_width, self.tensor_width] if self.model_name == "raw" else [self.batch_size, self.tensor_width, 1],
+                [None, 2]
+            )
+        )
+
         # Model
-        model = ResNetv2(self.tensor_width, self.tensor_width, self.num_channel, self.model_width,
-                         problem_type=self.problem_type, output_nums=self.output_nums, pooling='max',
-                         dropout_rate=self.dropout_rate).ResNet18()
+        if self.model_name == "raw":
+            model = Build_MnasNet('a1', dict(input_shape=(self.tensor_width, self.tensor_width, 1), dropout_rate=self.dropout_rate, normalize_input=False, num_classes=2))
+        else:
+            model = Build_MnasNet('a1', dict(input_shape=(self.tensor_width, 1, 1), dropout_rate=self.dropout_rate, normalize_input=False, num_classes=2))
 
         # Optimizer
         sgd = SGD(learning_rate=self.learning_rate, momentum=self.momentum)
@@ -59,7 +81,7 @@ class Train:
             tf.keras.callbacks.LearningRateScheduler(decay),
         ]
 
-        return model, sgd, callbacks
+        return model, sgd, callbacks, training_generator, validation_generator
 
     def train(self):
         """
@@ -68,19 +90,7 @@ class Train:
         # Distributed Strategy
         strategy = tf.distribute.MirroredStrategy()
 
-        # Generators
-        training_generator = tf.data.Dataset.from_generator(
-            generator=lambda: self.processed.generator(TYPE.train),
-            output_types=(tf.float32, tf.float32),
-            output_shapes=([self.batch_size, self.tensor_width, self.tensor_width], [None, 2])
-        )
-        validation_generator = tf.data.Dataset.from_generator(
-            generator=lambda: self.processed.generator(TYPE.validation),
-            output_types=(tf.float32, tf.float32),
-            output_shapes=([self.batch_size, self.tensor_width, self.tensor_width], [None, 2])
-        )
-
-        model, sgd, cb = self.build_model()
+        model, sgd, cb, training_generator, validation_generator = self.build_model()
 
         visualkeras.layered_view(model, legend=True, to_file=self.save_location + 'model.png')
 
@@ -97,10 +107,10 @@ class Train:
             workers=6,
             x=training_generator,
             batch_size=self.batch_size,
-            epochs=100,
+            epochs=self.epochs,
             validation_data=validation_generator,
             callbacks=cb
         )
         model.save(self.save_location + 'saved-model/')
 
-        return model
+        self.model = model

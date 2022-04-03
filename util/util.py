@@ -1,4 +1,7 @@
 import os
+import mmh3
+from collections import Counter
+from math import log
 
 
 class TYPE:
@@ -8,15 +11,25 @@ class TYPE:
 
 
 class Models:
-    lexicographical: str = "lex"
+    lexicographical: str = "lexical"
+    ngram: str = "ngram"
     raw: str = "raw"
     all: str = "all"
 
     def __init__(self, arg):
+        self.sizes = {
+            Models.raw: 175,
+            Models.lexicographical: 10,
+            Models.ngram: None
+        }
         if arg == Models.all:
-            self.current_models = [Models.lexicographical, Models.raw]
+            self.current_models = [Models.ngram, Models.lexicographical, Models.raw]
         else:
             self.current_models = [arg]
+
+    def get_size(self, m):
+        return self.sizes[m]
+
 
 obj = {
     0: [0, 0, 0, 0, 0, 0, 0],
@@ -155,12 +168,19 @@ def get_characters():
 
 
 def get_args():
-    return [Models.all, Models.raw, Models.lexicographical]
+    return [Models.all, Models.raw, Models.lexicographical, Models.ngram]
 
 
 def get_save_loc(m):
     f = "models/" + m + "/"
-    is_f = os.path.isdir(f)
-    if not is_f:
+    if not os.path.isdir(f):
         os.makedirs(f)
     return f
+
+
+def shannon(string):
+    return - sum(f * log(f, 2) for f in ((i / len(string)) for i in Counter(string).values()))
+
+
+def murmur(string):
+    return mmh3.hash(string, 200, signed=False)

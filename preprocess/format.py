@@ -1,10 +1,13 @@
 import random
-
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+import tld
 
-from util.util import get_characters, TYPE
+from tldextract import tldextract
+from urllib.parse import urlparse
+from train.train_ngram import NGram
+from util.util import get_characters, TYPE, Models, shannon, murmur
 
 
 class PProcess:
@@ -18,9 +21,14 @@ class PProcess:
         self.split_val = 0.1
         self.batch_size = batch_size
         self.test_labels = np.array([])
-        self.data = self.preprocess()
+        self.data = None
+        self.ng = NGram(self.data)
+        self.ng.load_models()
 
-    def buildmatrix(self, url):
+    def ngram(self, hn, t):
+        return self.ng.predict_proba(hn, t)
+
+    def buildmatrix_raw(self, url):
         char_obj = get_characters()
         main = np.zeros(shape=(self.tensor_length, self.char_len), dtype=np.byte)
         for cc, char in enumerate(url):
@@ -28,19 +36,65 @@ class PProcess:
                 main[cc] = np.array(char_obj.get(ord(char), [0, 0, 0, 0, 0, 0, 0]), dtype=np.byte)
         return np.reshape(main, (self.tensor_root, self.tensor_root))
 
-    def generator(self, t):
+    def buildmatrix_lexical(self, url):
+        main = np.zeros(shape=(self.tensor_root, 1), dtype=np.float32)
+        if not url.startswith('http://') and not url.startswith('https://'):
+            url = 'http://' + url
+        parsed = urlparse(url)
+        toplevel, domain, subdomain = tld.parse_tld(url)
+        if parsed.netloc is None:
+            return None
+        # Has subdomain
+        main[0] = 1 if tldextract.extract(parsed.netloc).subdomain != "" else 0
+        # TLD
+        main[1] = murmur(toplevel)
+        # Length of domain - TLD
+        main[2] = len(parsed.netloc[:len(toplevel) * -1])
+        # Port
+        main[3] = parsed.port if parsed.port else 0
+        # Number of digits in the URL
+        main[4] = sum(c.isdigit() for c in url)
+        # Number of characters in the URL
+        main[5] = sum(c.isalpha() for c in url)
+        # Shannon Entropy
+        main[6] = shannon(url)
+        # N-gram 1, 2, 3
+        main[7] = self.ngram([parsed.netloc], 1)[0][1]
+        main[8] = self.ngram([parsed.netloc], 2)[0][1]
+        main[9] = self.ngram([parsed.netloc], 3)[0][1]
+        return main
+
+    def generator_lexical(self, t):
         dataset = self.data[t]
+        main = np.zeros(shape=(self.batch_size, self.tensor_root, 1), dtype=np.float32)
+        labels = np.zeros(shape=(self.batch_size, 1), dtype=np.byte)
+        for i in range(self.batch_size):
+            v = random.randint(0, len(dataset.index) - 1)
+            url = dataset['url'][v]
+            labels[i] = dataset['label'][v]
+            r = self.buildmatrix_lexical(url)
+            while r is None:
+                r = self.buildmatrix_lexical(url)
+            main[i] = r
+        return main, tf.keras.utils.to_categorical(labels, num_classes=2)
+
+    def generator_raw(self, t):
+        dataset = self.data[t]
+        main = np.zeros(shape=(self.batch_size, self.tensor_root, self.tensor_root), dtype=np.byte)
+        labels = np.zeros(shape=(self.batch_size, 1), dtype=np.byte)
+        for i in range(self.batch_size):
+            v = random.randint(0, len(dataset.index) - 1)
+            url = dataset['url'][v]
+            labels[i] = dataset['label'][v]
+            main[i] = self.buildmatrix_raw(url)
+        return main, tf.keras.utils.to_categorical(labels, num_classes=2)
+
+    def generator(self, t, m):
         while True:
-            main = np.zeros(shape=(self.batch_size, self.tensor_root, self.tensor_root), dtype=np.byte)
-            labels = np.zeros(shape=(self.batch_size, 1), dtype=np.byte)
-            for i in range(self.batch_size):
-                v = random.randint(0, len(dataset.index) - 1)
-                url = dataset['url'][v]
-                labels[i] = dataset['label'][v]
-                main[i] = self.buildmatrix(url)
-            if t == TYPE.test:
-                self.test_labels = np.append(self.test_labels, labels)
-            yield main, tf.keras.utils.to_categorical(labels, num_classes=2)
+            if m == Models.raw:
+                yield self.generator_raw(t)
+            elif m == Models.lexicographical:
+                yield self.generator_lexical(t)
 
     def build_df(self, s, replace_vals, label):
         """
@@ -90,7 +144,7 @@ class PProcess:
         print("Test length: ", test_len)
         print(f"Ratio: {int(train_len / tot_len * 100)}/{int(val_len / tot_len * 100)}/{int(test_len / tot_len * 100)}")
 
-        return {
+        self.data = {
             TYPE.train: train_dataset,
             TYPE.validation: val_dataset,
             TYPE.test: test_dataset

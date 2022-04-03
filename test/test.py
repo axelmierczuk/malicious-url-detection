@@ -7,11 +7,12 @@ from tqdm import tqdm
 
 
 class Evaluate:
-    def __init__(self, m, trained=None):
+    def __init__(self, m, trained=None, batch_size=None, size=None):
         self.save_location = get_save_loc(m)
         if trained is None:
-            self.model = tf.keras.models.load_model(self.save_location + '/saved-model/')
-            self.processed = PProcess(8, 175)
+            self.model = tf.keras.models.load_model(self.save_location + 'saved-model/')
+            self.processed = PProcess(batch_size, size)
+            self.processed.preprocess()
         else:
             self.model = trained.model
             self.processed = trained.processed
@@ -20,14 +21,13 @@ class Evaluate:
         self.MP = 0.725
         self.LP = 0.65
 
-        self.test = self.processed.generator(TYPE.test)
+        self.size = size
+        self.model_name = m
+        self.test = self.processed.generator(TYPE.test, m)
         self.batch_size = self.processed.batch_size
         self.labels = np.array([])
-        self.predictions = self.evaluate()
-        self.stats = self.stats()
-
-        with open(self.save_location + 'data.json', 'w', encoding='utf-8') as f:
-            json.dump(self.stats, f, ensure_ascii=False, indent=4)
+        self.predictions = None
+        self.statistics = None
 
     def stats(self):
         mal_index = np.nonzero(self.labels)[0]
@@ -110,7 +110,9 @@ class Evaluate:
         res['false-negative']['low-probability']['percentage'] = float("{0:.2f}".format(res['false-negative']['low-probability']['count'] / res['total-malicious']))
         res['false-negative']['total']['percentage'] = float("{0:.2f}".format(res['false-negative']['total']['count'] / res['total-malicious']))
 
-        return res
+        self.statistics = res
+        with open(self.save_location + 'data.json', 'w', encoding='utf-8') as f:
+            json.dump(self.statistics, f, ensure_ascii=False, indent=4)
 
     def evaluate(self):
         """
@@ -120,9 +122,12 @@ class Evaluate:
         test_generator = tf.data.Dataset.from_generator(
             generator=lambda: self.test,
             output_types=(tf.float32, tf.float32),
-            output_shapes=([self.batch_size, self.processed.tensor_root, self.processed.tensor_root], [None, 2])
+            output_shapes=(
+                [self.batch_size, self.size, self.size] if self.model_name == "raw" else [self.batch_size, self.size, 1],
+                [None, 2]
+            )
         )
-        results = self.model.evaluate(x=test_generator, steps=len(self.processed.data[TYPE.test]) // self.batch_size, batch_size=self.batch_size)
+        results = self.model.evaluate(x=test_generator, steps=len(self.processed.data[TYPE.test].index) // self.batch_size, batch_size=self.batch_size)
 
         res = np.array([])
         dataset = test_generator.enumerate()
@@ -135,5 +140,7 @@ class Evaluate:
                 self.labels = np.append(self.labels, np.array([i[1] for i in b[1][1]]))
                 res = np.append(res, self.model.predict_step(b[1]))
         res = res.reshape((len(self.processed.data[TYPE.test]) // self.batch_size) * self.batch_size, 2)
+        print(res)
         print("test loss, test acc:", results)
-        return res
+
+        self.predictions = res
