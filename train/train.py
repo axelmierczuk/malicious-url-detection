@@ -11,12 +11,13 @@ import visualkeras
 
 
 def decay(epoch):
-    if epoch < 3:
-        return 1e-3
-    elif 3 <= epoch < 7:
-        return 1e-4
-    else:
-        return 1e-5
+    return 1e-3
+    # if epoch < 3:
+    #     return 1e-3
+    # elif 3 <= epoch < 7:
+    #     return 1e-4
+    # else:
+    #     return 1e-5
 
 
 class Train:
