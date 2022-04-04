@@ -71,10 +71,7 @@ class Train:
         if self.model_name == "raw":
             model = ResNetv2(self.tensor_width, self.tensor_width, self.num_channel, self.model_width, problem_type=self.problem_type, output_nums=self.output_nums, pooling='max', dropout_rate=self.dropout_rate).ResNet18()
         else:
-            # model = Build_MnasNet('a1', dict(input_shape=(self.tensor_width, 1, 1), dropout_rate=self.dropout_rate, normalize_input=False, num_classes=2))
-            model = ResNetv2(self.tensor_width, 1, self.num_channel, self.model_width,
-                     problem_type=self.problem_type, output_nums=self.output_nums, pooling='max',
-                     dropout_rate=self.dropout_rate).ResNet18()
+            model = Build_MnasNet('a1', dict(input_shape=(self.tensor_width, 1, 1), dropout_rate=self.dropout_rate, normalize_input=False, num_classes=2))
 
         # Optimizer
         sgd = SGD(learning_rate=self.learning_rate, momentum=self.momentum)
