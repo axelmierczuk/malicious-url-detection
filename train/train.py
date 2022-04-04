@@ -71,7 +71,7 @@ class Train:
         if self.model_name == "raw":
             model = ResNetv2(self.tensor_width, self.tensor_width, self.num_channel, self.model_width, problem_type=self.problem_type, output_nums=self.output_nums, pooling='max', dropout_rate=self.dropout_rate).ResNet18()
         else:
-            model = MobileNet(self.tensor_width, self.num_channel, self.model_width, problem_type=self.problem_type, output_nums=self.output_nums, pooling='max', dropout_rate=self.dropout_rate).MobileNet_v3_Large()
+            model = MobileNet(self.tensor_width, self.num_channel, 32, problem_type=self.problem_type, output_nums=self.output_nums, pooling='max', dropout_rate=self.dropout_rate).MobileNet_v3_Large()
 
         # Optimizer
         sgd = SGD(learning_rate=self.learning_rate, momentum=self.momentum)
