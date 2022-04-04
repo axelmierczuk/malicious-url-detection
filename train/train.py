@@ -93,7 +93,14 @@ class Train:
 
         model, sgd, cb, training_generator, validation_generator = self.build_model()
 
-        visualkeras.layered_view(model, legend=True, to_file=self.save_location + 'model.png')
+        try:
+            visualkeras.layered_view(model, legend=True, to_file=self.save_location + 'model-layered.png')
+        except:
+            pass
+        try:
+            visualkeras.graph_view(model, to_file=self.save_location + 'model-graph.png')
+        except:
+            pass
 
         model.compile(
             loss='mean_squared_error',
