@@ -62,7 +62,7 @@ class PProcess:
             r = dataset.iloc[v]
             labels[i] = r[self.main_label]
             main[i] = np.array(r.values.tolist()[:-1], dtype=np.float32)
-        return np.expand_dims(main, axis=2), tf.keras.utils.to_categorical(labels, num_classes=2)
+        return main, tf.keras.utils.to_categorical(labels, num_classes=2)
 
     def generator_raw(self, t):
         dataset = self.data[t]

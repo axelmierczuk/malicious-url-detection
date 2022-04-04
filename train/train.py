@@ -2,7 +2,7 @@ import time
 import os
 import tensorflow as tf
 
-from train.models.MnasNet_models import Build_MnasNet
+from train.models.MobileNet_1DCNN import MobileNet
 from tensorflow.keras.optimizers import SGD
 from preprocess.format import PProcess
 from util.util import TYPE, get_save_loc, Models
@@ -54,7 +54,7 @@ class Train:
             generator=lambda: self.processed.generator(TYPE.train, self.model_name),
             output_types=(tf.float32, tf.float32),
             output_shapes=(
-                [self.batch_size, self.tensor_width, self.tensor_width] if self.model_name == "raw" else [self.batch_size, self.tensor_width, 1],
+                [self.batch_size, self.tensor_width, self.tensor_width] if self.model_name == "raw" else [self.batch_size, self.tensor_width],
                 [None, 2]
             )
         )
@@ -62,7 +62,7 @@ class Train:
             generator=lambda: self.processed.generator(TYPE.validation, self.model_name),
             output_types=(tf.float32, tf.float32),
             output_shapes=(
-                [self.batch_size, self.tensor_width, self.tensor_width] if self.model_name == "raw" else [self.batch_size, self.tensor_width, 1],
+                [self.batch_size, self.tensor_width, self.tensor_width] if self.model_name == "raw" else [self.batch_size, self.tensor_width],
                 [None, 2]
             )
         )
@@ -71,7 +71,7 @@ class Train:
         if self.model_name == "raw":
             model = ResNetv2(self.tensor_width, self.tensor_width, self.num_channel, self.model_width, problem_type=self.problem_type, output_nums=self.output_nums, pooling='max', dropout_rate=self.dropout_rate).ResNet18()
         else:
-            model = Build_MnasNet('a1', dict(input_shape=(self.tensor_width, 1, 1), dropout_rate=self.dropout_rate, normalize_input=False, num_classes=2))
+            model = MobileNet(self.tensor_width, self.num_channel, self.model_width, problem_type=self.problem_type, output_nums=self.output_nums, pooling='max', dropout_rate=self.dropout_rate).MobileNet_v3_Large()
 
         # Optimizer
         sgd = SGD(learning_rate=self.learning_rate, momentum=self.momentum)
