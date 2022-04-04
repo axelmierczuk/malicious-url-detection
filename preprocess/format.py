@@ -40,17 +40,31 @@ class PProcess:
             parsed = urlparse(url)
         except:
             return None
-        toplevel, domain, subdomain = tld.parse_tld(url)
-        if parsed.netloc is None or toplevel is None:
+        if parsed.netloc is None:
             return None
+        try:
+            p = int(parsed.port)
+        except:
+            p = None
+
         main[0] = 1 if tldextract.extract(parsed.netloc).subdomain != "" else 0
-        main[1] = murmur(toplevel)
-        main[2] = len(parsed.netloc[:len(toplevel) * -1])
-        main[3] = parsed.port if parsed.port else 0
-        main[4] = sum(c.isdigit() for c in url)
-        main[5] = sum(c.isalpha() for c in url)
-        main[6] = shannon(url)
-        main[7] = int(label)
+        main[1] = len(url)
+        main[2] = p if p else 0
+        main[3] = sum(c.isdigit() for c in url)
+        main[4] = sum(c.isalpha() for c in url)
+        main[5] = sum(c == "." for c in url)
+        main[6] = sum(c == "-" for c in url)
+        main[7] = 1 if "@" in url else 0
+        main[8] = 1 if "~" in url else 0
+        main[9] = sum(c == "_" for c in url)
+        main[10] = sum(c == "%" for c in url)
+        main[11] = sum(c == "&" for c in url)
+        main[12] = sum(c == "#" for c in url)
+        main[13] = len(parsed.path.split('/'))
+        main[14] = 1 if "//" in parsed.path else 0
+        main[15] = len(parsed.query)
+        main[16] = shannon(url)
+        main[17] = int(label)
         return main
 
     def generator_lexical(self, t):
@@ -95,8 +109,8 @@ class PProcess:
             if tmp is not None:
                 fin_arr.append(tmp.tolist())
                 fin_urls.append(row['url'])
-        df_final = pandas.DataFrame(fin_arr, columns=['subdomain', 'tld', 'len', 'port', 'digits', 'characters', 'entropy', 'label'])
-        df_final.insert(8, "url", fin_urls, True)
+        df_final = pandas.DataFrame(fin_arr, columns=['Subdomain', 'Len', 'IsPort', 'NumDigits', 'NumChars', 'PeriodChar', 'DashChar', 'AtChar', 'TidelChar', 'UnderscoreChar', 'PercentChar', 'AmpersandChar', 'HashChar', 'PathLen', 'DoubleSlash', 'QueryLen', 'Entropy', 'label'])
+        df_final.insert(17, "url", fin_urls, True)
         df_final.to_csv('data/lexical_dataset.csv', index=False)
 
     def build_df(self, s, replace_vals, label):

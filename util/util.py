@@ -23,7 +23,7 @@ class Models:
     def __init__(self, arg):
         self.sizes = {
             Models.raw: 175,
-            Models.lexicographical: 7,
+            Models.lexicographical: 17,
             Models.ngram: None
         }
         if arg == Models.all:
