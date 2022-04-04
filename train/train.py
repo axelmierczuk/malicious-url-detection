@@ -71,7 +71,7 @@ class Train:
             model = ResNetv2(self.tensor_width, self.tensor_width, self.num_channel, self.model_width, problem_type=self.problem_type, output_nums=self.output_nums, pooling='max', dropout_rate=self.dropout_rate).ResNet18()
         else:
             # model = Build_MnasNet('a1', dict(input_shape=(self.tensor_width, 1, 1), dropout_rate=self.dropout_rate, normalize_input=False, num_classes=2))
-            ResNetv2(self.tensor_width, 1, self.num_channel, self.model_width,
+            ResNetv2(self.batch_size, self.tensor_width, self.num_channel, self.model_width,
                      problem_type=self.problem_type, output_nums=self.output_nums, pooling='max',
                      dropout_rate=self.dropout_rate).ResNet18()
 
