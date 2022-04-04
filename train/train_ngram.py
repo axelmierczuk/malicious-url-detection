@@ -10,7 +10,7 @@ class NGram:
     def __init__(self, data, label="label", n=1):
         self.data = data
         self.main_label = label
-        self.save_name = "pipeline-" + str(n)
+        self.save_name = "ngram-" + str(n)
         self.ngram = n
         self.model = None
         self.models = {}
@@ -18,14 +18,14 @@ class NGram:
 
     def set_ngram(self, n):
         self.ngram = n
-        self.save_name = "pipeline-" + str(n)
+        self.save_name = "ngram-" + str(n)
 
     def load_model(self):
         self.model = joblib.load(get_save_loc(Models.ngram) + self.save_name + ".joblib")
 
     def load_models(self):
         for i in range(1, 4):
-            self.models[i] = joblib.load(get_save_loc(Models.ngram) + "pipeline-" + str(i) + ".joblib")
+            self.models[i] = joblib.load(get_save_loc(Models.ngram) + "ngram-" + str(i) + ".joblib")
 
     def export_model(self):
         if self.model is None:

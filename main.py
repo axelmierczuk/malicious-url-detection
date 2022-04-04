@@ -4,9 +4,28 @@ import sys
 
 from preprocess.format import PProcess
 from train.train_ngram import NGram
-from util.util import Models, get_args
+from util.util import Models, get_args, get_save_loc, get_type
+
 pd.options.display.max_columns = None
 pd.options.display.max_rows = None
+
+
+# TODO To make this work, will need to do if statements. It is the only way to achieve granularity for each model.
+# def make_prediction(urls):
+#     import tensorflow as tf
+#     import numpy as np
+#     import joblib
+#
+#     predictions = {}
+#     for model_name in get_args():
+#         t = get_type(model_name)
+#         if t == Models.SKLEARN:
+#             model = joblib.load(get_save_loc(Models.ngram) + model_name + ".joblib")
+#             predictions[model_name] = np.array(model.predict_proba(urls))
+#         elif t == Models.TF:
+#             model = tf.keras.models.load_model(get_save_loc(model_name) + 'saved-model/')
+#             predictions[model_name] = np.array(model.predict(urls))
+#     print(predictions)
 
 
 def main(m, t, e, b, ep):
@@ -16,7 +35,7 @@ def main(m, t, e, b, ep):
     for model in m.current_models:
         if t and e:
             if model == Models.ngram:
-                processed = PProcess(0, 0)
+                processed = PProcess(0, "raw", 0)
                 ngram = NGram(processed)
                 ngram.train_model()
                 ngram.set_ngram(2)

@@ -9,9 +9,11 @@ from tqdm import tqdm
 class Evaluate:
     def __init__(self, m, trained=None, batch_size=None, size=None):
         self.save_location = get_save_loc(m)
+        self.model_name = m
+
         if trained is None:
             self.model = tf.keras.models.load_model(self.save_location + 'saved-model/')
-            self.processed = PProcess(batch_size, size)
+            self.processed = PProcess(batch_size, self.model_name, size)
             self.processed.preprocess()
         else:
             self.model = trained.model
@@ -22,7 +24,6 @@ class Evaluate:
         self.LP = 0.65
 
         self.size = size
-        self.model_name = m
         self.test = self.processed.generator(TYPE.test, m)
         self.batch_size = self.processed.batch_size
         self.labels = np.array([])

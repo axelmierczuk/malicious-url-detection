@@ -11,15 +11,19 @@ class TYPE:
 
 
 class Models:
+    SKLEARN = "sklearn"
+    TF = "tf"
     lexicographical: str = "lexical"
-    ngram: str = "ngram"
+    ngram: str = "ngram-1"
+    ngram2: str = "ngram-2"
+    ngram3: str = "ngram-3"
     raw: str = "raw"
     all: str = "all"
 
     def __init__(self, arg):
         self.sizes = {
             Models.raw: 175,
-            Models.lexicographical: 10,
+            Models.lexicographical: 7,
             Models.ngram: None
         }
         if arg == Models.all:
@@ -168,11 +172,21 @@ def get_characters():
 
 
 def get_args():
-    return [Models.all, Models.raw, Models.lexicographical, Models.ngram]
+    return [Models.raw, Models.lexicographical, Models.ngram]
+
+
+def get_type(s):
+    if s == Models.ngram:
+        return Models.SKLEARN
+    else:
+        return Models.TF
 
 
 def get_save_loc(m):
-    f = "models/" + m + "/"
+    if "-" in m:
+        f = "models/" + m.split('-')[0] + "/"
+    else:
+        f = "models/" + m + "/"
     if not os.path.isdir(f):
         os.makedirs(f)
     return f
@@ -183,4 +197,6 @@ def shannon(string):
 
 
 def murmur(string):
+    if string is None:
+        return mmh3.hash("0", 200, signed=False)
     return mmh3.hash(string, 200, signed=False)

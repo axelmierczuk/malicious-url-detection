@@ -6,6 +6,7 @@ from train.models.MnasNet_models import Build_MnasNet
 from tensorflow.keras.optimizers import SGD
 from preprocess.format import PProcess
 from util.util import TYPE, get_save_loc, Models
+from train.models.ResNet_v2_2DCNN import ResNetv2
 import visualkeras
 
 
@@ -38,7 +39,7 @@ class Train:
         self.save_location = get_save_loc(self.model_name)
         self.epochs = epochs
         # Start working
-        self.processed = PProcess(self.batch_size, self.tensor_width)
+        self.processed = PProcess(self.batch_size, self.model_name, self.tensor_width)
         self.processed.preprocess()
         self.model = None
 
@@ -67,7 +68,7 @@ class Train:
 
         # Model
         if self.model_name == "raw":
-            model = Build_MnasNet('a1', dict(input_shape=(self.tensor_width, self.tensor_width, 1), dropout_rate=self.dropout_rate, normalize_input=False, num_classes=2))
+            model = ResNetv2(self.tensor_width, self.tensor_width, self.num_channel, self.model_width, problem_type=self.problem_type, output_nums=self.output_nums, pooling='max', dropout_rate=self.dropout_rate).ResNet18()
         else:
             model = Build_MnasNet('a1', dict(input_shape=(self.tensor_width, 1, 1), dropout_rate=self.dropout_rate, normalize_input=False, num_classes=2))
 
@@ -80,7 +81,6 @@ class Train:
             tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_prefix, save_weights_only=True),
             tf.keras.callbacks.LearningRateScheduler(decay),
         ]
-
         return model, sgd, callbacks, training_generator, validation_generator
 
     def train(self):
@@ -88,7 +88,7 @@ class Train:
         Main training function. Takes a training dataframe and exports a saved model.
         """
         # Distributed Strategy
-        strategy = tf.distribute.MirroredStrategy()
+        tf.distribute.MirroredStrategy()
 
         model, sgd, cb, training_generator, validation_generator = self.build_model()
 
@@ -111,6 +111,7 @@ class Train:
             validation_data=validation_generator,
             callbacks=cb
         )
+
         model.save(self.save_location + 'saved-model/')
 
         self.model = model
