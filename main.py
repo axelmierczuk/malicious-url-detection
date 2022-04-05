@@ -147,7 +147,7 @@ class API:
         end = timer()
         print(f"Modeling executed in {end - start} seconds.")
 
-        return res_raw, res_ngram_1, res_ngram_2, res_ngram_3, res_lexical, final_arr
+        return res_raw, res_ngram_1, res_ngram_2, res_ngram_3, res_lexical, np.array(final_arr)
 
 
 def main(m, t, e, b, ep):
