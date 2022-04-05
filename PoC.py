@@ -66,13 +66,12 @@ import pandas as pd
 def main(is_report):
     # MALICIOUS / BENIGN URLs (NOT used in training)
     # https://www.unb.ca/cic/datasets/url-2016.html
-    colnames = ['urls']
     csv_list = ["data/test/urldata.csv"]
 
     # Load models
     api = API()
     for csv in csv_list:
-        api.set_urls(pd.read_csv(csv, names=colnames, header=None)['urls'].tolist())
+        api.set_urls(pd.read_csv(csv)['url'].tolist())
         if is_report:
             # Build reports
             print("Building data/test/" + csv[:-4].split("/")[-1] + ".csv")
