@@ -67,7 +67,7 @@ def main(is_report):
     # MALICIOUS / BENIGN URLs (NOT used in training)
     # https://www.unb.ca/cic/datasets/url-2016.html
     colnames = ['urls']
-    csv_list = ["data/test/benign.csv", "data/test/defacement.csv", "data/test/malware.csv", "data/test/phishing.csv", "data/test/spam.csv"]
+    csv_list = ["data/test/urldata.csv"]
 
     # Load models
     api = API()
