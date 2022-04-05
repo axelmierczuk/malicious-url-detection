@@ -118,18 +118,23 @@ A 80/10/10 split was used with this dataset to train, validate, and test, respec
 
 The following dataset was used to test the models:
 
-- https://www.unb.ca/cic/datasets/url-2016.html **[2]**
 
-All results shown bellow are derived from running the models on the _test_ dataset. This dataset was not used in the training 
-and had not been seen by the models before the testing phase.
+- ~~https://www.unb.ca/cic/datasets/url-2016.html **[2]**~~
 
-The categories each have the following count of URLs:
+EDIT: This training dataset contains URLs from the training dataset. I will be updating results once I generate a report. So far, these are the 
+results from the dataset found [here](https://www.kaggle.com/datasets/siddharthkumar25/malicious-and-benign-urls):
 
-- Benign - 35378
-- Defacement - 96457
-- Malware - 11566
-- Phishing - 9965
-- Spam - 12000
+```
+Modeling executed in 2514.361137835 seconds.
+DATASET - data/test/urldata.csv
+URL Count - 104438
+(Model - raw) Detected 95.08% accurately
+(Model - ngram_1) Detected 99.26% accurately
+(Model - ngram_2) Detected 53.88% accurately
+(Model - ngram_3) Detected 20.54% accurately
+(Model - lexical) Detected 54.08% accurately
+(Model - final) Detected 93.62% accurately
+```
 
 ## Models
 
