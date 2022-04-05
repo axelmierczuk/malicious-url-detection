@@ -1,6 +1,6 @@
 import joblib
 from sklearn.feature_extraction.text import TfidfTransformer, CountVectorizer
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 import numpy as np
 from util.util import TYPE, get_save_loc, Models
@@ -43,7 +43,7 @@ class NGram:
 
     def build_pipeline(self):
         print("Building pipeline.")
-        return Pipeline([('vect', CountVectorizer(ngram_range=(self.ngram, self.ngram))), ('tfidf', TfidfTransformer()), ('clf', MultinomialNB())])
+        return Pipeline([('vect', CountVectorizer(ngram_range=(self.ngram, self.ngram))), ('tfidf', TfidfTransformer()), ('clf', RandomForestClassifier(max_depth=10000, random_state=0))])
 
     def fit(self):
         print("Fitting model.")

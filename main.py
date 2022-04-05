@@ -99,8 +99,6 @@ class API:
         return res_raw, res_ngram_1, res_ngram_2, res_ngram_3, res_lexical, final_arr
 
 
-
-
 def main(m, t, e, b, ep):
     from train.train import Train
     from test.test import Evaluate
