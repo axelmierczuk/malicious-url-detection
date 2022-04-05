@@ -17,7 +17,7 @@
 
 In the past, attempts at malicious URL detection have included feature extraction through lexical, or DNS analysis. These are extremely valuable techniques that can provide a well rounded approach to malicious URL analysis. The extracted features can be compared with IOCs, or analyzed through machine learning models / deep neural networks to form well-rounded detection. 
 
-What differentiates this project from others is the development of a neural network capable of analyzing *raw* URLs. This raw analysis model does not leverage any feature extraction, but can be combined with models / IOCs that do in order to provide fuller coverage. 
+What differentiates this project from others is the development of a neural network capable of analyzing *raw* URLs. This raw analysis model does not leverage any feature extraction, but can be combined with models / IOCs that do in order to provide better coverage. 
 
 As a result, this raw URL analysis model, in combination with n-gram (1, 2, 3), and lexical analysis models out performs many models previously developed.
 
