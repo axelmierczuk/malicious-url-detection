@@ -82,7 +82,7 @@ api.build_report("data/", "google-analysis")
 
 ## Results
 
-By leveraging the [ISCX-URL2016](https://www.unb.ca/cic/datasets/url-2016.html) [4] dataset, reports were generated for each of the CSVs which were *not* used to train the models:
+By leveraging the [ISCX-URL2016](https://www.unb.ca/cic/datasets/url-2016.html) [2] dataset, reports were generated for each of the CSVs which were *not* used to train the models:
 
 | Data Type  |  Model   | Detection Rate (P(X) > 0.5) | False Negative Rate | Processing Time / URL (ms) |
 |:----------:|:--------:|:---------------------------:|:-------------------:|:--------------------------:|
@@ -134,15 +134,13 @@ less exposure to phishing URLs, the models are less capable of properly identify
 
 ## References
 
-**[1]** Sakib1263, ResNet-ResNetV2-SEResNet-ResNeXt-SEResNeXt-1D-2D-Tensorflow-Keras, (2022), GitHub repository, https://github.com/Sakib1263/ResNet-ResNetV2-SEResNet-ResNeXt-SEResNeXt-1D-2D-Tensorflow-Keras
+**[1]** Cho Do Xuan, Hoa Dinh Nguyen and Tisenko Victor Nikolaevich, “Malicious URL Detection based on Machine Learning” International Journal of Advanced Computer Science and Applications(IJACSA), 11(1), 2020. http://dx.doi.org/10.14569/IJACSA.2020.0110119
 
-**[2]** Singh, A.K. “Malicious and Benign Webpages Dataset.” Data in Brief, vol. 32, 2020, p. 106304., https://doi.org/10.1016/j.dib.2020.106304. Accessed 5 Apr. 2022. 
+**[2]** Mohammad Saiful Islam Mamun, Mohammad Ahmad Rathore, Arash Habibi Lashkari, Natalia Stakhanova and Ali A. Ghorbani, "Detecting Malicious URLs Using Lexical Analysis", Network and System Security, Springer International Publishing, P467--482, 2016.
 
+**[3]** Sakib1263, ResNet-ResNetV2-SEResNet-ResNeXt-SEResNeXt-1D-2D-Tensorflow-Keras, (2022), GitHub repository, https://github.com/Sakib1263/ResNet-ResNetV2-SEResNet-ResNeXt-SEResNeXt-1D-2D-Tensorflow-Keras
 
-**[3]** Siddhartha, M. (2021, July 23). Malicious urls dataset. Kaggle. Retrieved April 5, 2022, from https://www.kaggle.com/datasets/sid321axn/malicious-urls-dataset 
+**[4]** Singh, A.K. “Malicious and Benign Webpages Dataset.” Data in Brief, vol. 32, 2020, p. 106304., https://doi.org/10.1016/j.dib.2020.106304. Accessed 5 Apr. 2022. 
 
-
-**[4]** Mohammad Saiful Islam Mamun, Mohammad Ahmad Rathore, Arash Habibi Lashkari, Natalia Stakhanova and Ali A. Ghorbani, "Detecting Malicious URLs Using Lexical Analysis", Network and System Security, Springer International Publishing, P467--482, 2016.
-
-
+**[5]** Siddhartha, M. (2021, July 23). Malicious urls dataset. Kaggle. Retrieved April 5, 2022, from https://www.kaggle.com/datasets/sid321axn/malicious-urls-dataset
 
