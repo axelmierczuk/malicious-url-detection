@@ -1,6 +1,18 @@
 
 # Malicious URL Detection
 
+## Table of Contents
+
+* [Overview](#overview)
+* [Project Structure](#project-structure)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Datasets](#datasets)
+* [Models](#models)
+* [Results](#results-4)
+* [Future Improvements](#future-improvements)
+* [References](#references)
+
 ## Overview
 
 In the past, attempts at malicious URL detection have included feature extraction through lexical, or DNS analysis. These are extremely valuable techniques that can provide a well rounded approach to malicious URL analysis. The extracted features can be compared with IOCs, or analyzed through machine learning models / deep neural networks to form well-rounded detection. 
