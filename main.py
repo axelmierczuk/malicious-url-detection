@@ -109,16 +109,16 @@ class API:
             if name == "benign":
                 writer.writerow({
                     'num_items': len(self.urls),
-                    'execution_time (seconds)': '{0:.2f}'.format(end - start),
-                    'execution_time_per_url (milliseconds)': '{0:.2f}'.format((end - start) / len(self.urls) * 1000),
+                    'execution_time (s)': '{0:.2f}'.format(end - start),
+                    'execution_time_per_url (ms)': '{0:.2f}'.format((end - start) / len(self.urls) * 1000),
                     'detection_accuracy': '{0:.6f}'.format(np.count_nonzero(np.where(np.array(pd_df['final_benign_scores']) > 0.5)[0]) / len(pd_df['final_benign_scores'])),
                     'false_negative': '{0:.2f}'.format(np.count_nonzero(np.where(np.array(pd_df['final_benign_scores']) <= 0.5)[0]) / len(pd_df['final_benign_scores']))
                 })
             else:
                 writer.writerow({
                     'num_items': len(self.urls),
-                    'execution_time (seconds)': '{0:.2f}'.format(end - start),
-                    'execution_time_per_url (milliseconds)': '{0:.2f}'.format((end - start) / len(self.urls) * 1000),
+                    'execution_time (s)': '{0:.2f}'.format(end - start),
+                    'execution_time_per_url (ms)': '{0:.2f}'.format((end - start) / len(self.urls) * 1000),
                     'detection_accuracy': '{0:.6f}'.format(np.count_nonzero(np.where(np.array(pd_df['final_malicious_scores']) > 0.5)[0]) / len(pd_df['final_malicious_scores'])),
                     'false_negative': '{0:.2f}'.format(np.count_nonzero(np.where(np.array(pd_df['final_malicious_scores']) <= 0.5)[0]) / len(pd_df['final_malicious_scores']))
                 })
