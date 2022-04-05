@@ -5,8 +5,9 @@ import argparse
 import sys
 import tensorflow as tf
 import numpy as np
-from tldextract import tldextract
+import csv
 
+from tldextract import tldextract
 from preprocess.format import PProcess
 from train.train_ngram import NGram
 from train.train_lexical import Lexical
@@ -75,6 +76,56 @@ class API:
         main[15] = len(parsed.query)
         main[16] = shannon(url)
         return main
+
+    def build_report(self, save_location, name):
+        start = timer()
+        raw_results = np.array([])
+        for url in self.urls:
+            raw_results = np.append(raw_results, self.model_raw.predict_step(self.buildmatrix_raw(url)))
+        tmp = []
+        for url in self.urls:
+            tmp.append(self.buildmatrix_lexical(url))
+        pd_df = {
+            'raw_benign_scores': raw_results.reshape((len(self.urls)), 2)[:, 0],
+            'raw_malicious_scores': raw_results.reshape((len(self.urls)), 2)[:, 1],
+            'ngram_1_benign_scores': np.array(self.model_ngram.predict_proba(self.urls, 1))[:, 0],
+            'ngram_1_malicious_scores': np.array(self.model_ngram.predict_proba(self.urls, 1))[:, 1],
+            'ngram_2_benign_scores': np.array(self.model_ngram.predict_proba(self.urls, 2))[:, 0],
+            'ngram_2_malicious_scores': np.array(self.model_ngram.predict_proba(self.urls, 2))[:, 1],
+            'ngram_3_benign_scores': np.array(self.model_ngram.predict_proba(self.urls, 3))[:, 0],
+            'ngram_3_malicious_scores': np.array(self.model_ngram.predict_proba(self.urls, 3))[:, 1],
+            'lexical_benign_scores': np.array(self.model_lexical.predict_proba(tmp))[:, 0],
+            'lexical_malicious_scores': np.array(self.model_lexical.predict_proba(tmp))[:, 1],
+        }
+
+        pd_df['final_benign_scores'] = np.add(np.add(np.add(np.add(pd_df['raw_benign_scores'], (pd_df['ngram_1_benign_scores'] / 3)), (pd_df['ngram_2_benign_scores'] / 3)), (pd_df['ngram_3_benign_scores'] / 3)), pd_df['lexical_benign_scores']) / 3
+        pd_df['final_malicious_scores'] = np.add(np.add(np.add(np.add(pd_df['raw_malicious_scores'], (pd_df['ngram_1_malicious_scores'] / 3)), (pd_df['ngram_2_malicious_scores'] / 3)), (pd_df['ngram_3_malicious_scores'] / 3)), pd_df['lexical_malicious_scores']) / 3
+
+        end = timer()
+        with open(save_location + "/report-" + name + ".csv", 'w', newline='') as csvfile:
+            fieldnames = ['num_items', 'execution_time (s)', 'execution_time_per_url (ms)', 'detection_accuracy', 'false_negative']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            if name == "benign":
+                writer.writerow({
+                    'num_items': len(self.urls),
+                    'execution_time (seconds)': '{0:.2f}'.format(end - start),
+                    'execution_time_per_url (milliseconds)': '{0:.2f}'.format((end - start) / len(self.urls) * 1000),
+                    'detection_accuracy': '{0:.6f}'.format(np.count_nonzero(np.where(np.array(pd_df['final_benign_scores']) > 0.5)[0]) / len(pd_df['final_benign_scores'])),
+                    'false_negative': '{0:.2f}'.format(np.count_nonzero(np.where(np.array(pd_df['final_benign_scores']) <= 0.5)[0]) / len(pd_df['final_benign_scores']))
+                })
+            else:
+                writer.writerow({
+                    'num_items': len(self.urls),
+                    'execution_time (seconds)': '{0:.2f}'.format(end - start),
+                    'execution_time_per_url (milliseconds)': '{0:.2f}'.format((end - start) / len(self.urls) * 1000),
+                    'detection_accuracy': '{0:.6f}'.format(np.count_nonzero(np.where(np.array(pd_df['final_malicious_scores']) > 0.5)[0]) / len(pd_df['final_malicious_scores'])),
+                    'false_negative': '{0:.2f}'.format(np.count_nonzero(np.where(np.array(pd_df['final_malicious_scores']) <= 0.5)[0]) / len(pd_df['final_malicious_scores']))
+                })
+            writer.writerow({})
+        pd.DataFrame.from_dict(pd_df).to_csv(save_location + "/report-" + name + ".csv", index=False, mode='a')
+
+
 
     def make_predictions(self):
         start = timer()
