@@ -298,7 +298,7 @@ Bellow are the weightings of each feature, from greatest to smallest:
 
 ## Results
 
-By leveraging the [ISCX-URL2016](https://www.unb.ca/cic/datasets/url-2016.html) **[2]** dataset, reports were generated for each of the CSVs which were *not* used to train the models:
+By leveraging [this](https://www.kaggle.com/datasets/siddharthkumar25/malicious-and-benign-urls) **[2]** dataset, reports were generated for each of the CSVs which were *not* used to train the models:
 
 **TBA**
 
@@ -312,7 +312,7 @@ By leveraging the [ISCX-URL2016](https://www.unb.ca/cic/datasets/url-2016.html) 
 
 **[1]** Cho Do Xuan, Hoa Dinh Nguyen and Tisenko Victor Nikolaevich, “Malicious URL Detection based on Machine Learning” International Journal of Advanced Computer Science and Applications(IJACSA), 11(1), 2020. http://dx.doi.org/10.14569/IJACSA.2020.0110119
 
-**[2]** Mohammad Saiful Islam Mamun, Mohammad Ahmad Rathore, Arash Habibi Lashkari, Natalia Stakhanova and Ali A. Ghorbani, "Detecting Malicious URLs Using Lexical Analysis", Network and System Security, Springer International Publishing, P467--482, 2016.
+**[2]** Kumar, S. (2019, May 31). Malicious and benign urls. Kaggle. Retrieved April 5, 2022, from https://www.kaggle.com/datasets/siddharthkumar25/malicious-and-benign-urls 
 
 **[3]** Sakib1263, ResNet-ResNetV2-SEResNet-ResNeXt-SEResNeXt-1D-2D-Tensorflow-Keras, (2022), GitHub repository, https://github.com/Sakib1263/ResNet-ResNetV2-SEResNet-ResNeXt-SEResNeXt-1D-2D-Tensorflow-Keras
 
