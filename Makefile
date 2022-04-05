@@ -11,7 +11,7 @@ setup-data:
 
 setup-data-test:
 	-mkdir data/test
-	cd data/test && wget https://bitb-detection.s3.amazonaws.com/models/url-detection/dataset/testing/benign.csv && wget https://bitb-detection.s3.amazonaws.com/models/url-detection/dataset/testing/defacement.csv && wget https://bitb-detection.s3.amazonaws.com/models/url-detection/dataset/testing/malware.csv && wget https://bitb-detection.s3.amazonaws.com/models/url-detection/dataset/testing/phishing.csv && wget https://bitb-detection.s3.amazonaws.com/models/url-detection/dataset/testing/spam.csv
+	cd data/test && wget https://bitb-detection.s3.amazonaws.com/models/url-detection/dataset/urldata.csv
 
 setup-ngram:
 	-mkdir models && mkdir models/ngram
