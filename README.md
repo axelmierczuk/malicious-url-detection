@@ -123,6 +123,14 @@ The following dataset was used to test the models:
 All results shown bellow are derived from running the models on the _test_ dataset. This dataset was not used in the training 
 and had not been seen by the models before the testing phase.
 
+The categories each have the following count of URLs:
+
+- Benign - 35378
+- Defacement - 96457
+- Malware - 11566
+- Phishing - 9965
+- Spam - 12000
+
 ## Models
 
 ### Unified URL Analysis
