@@ -121,7 +121,7 @@ The following dataset was used to test the models:
 
 - ~~https://www.unb.ca/cic/datasets/url-2016.html **[2]**~~
 
-EDIT: This training dataset contains URLs from the training dataset. I will be updating results once I generate a report. So far, these are the 
+EDIT: This testing dataset contains URLs from the training dataset. I will be updating results once I generate a report. So far, these are the 
 results from the dataset found [here](https://www.kaggle.com/datasets/siddharthkumar25/malicious-and-benign-urls):
 
 ```
