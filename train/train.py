@@ -2,7 +2,6 @@ import time
 import os
 import tensorflow as tf
 
-from train.models.MobileNet_1DCNN import MobileNet
 from tensorflow.keras.optimizers import SGD
 from preprocess.format import PProcess
 from util.util import TYPE, get_save_loc, Models
@@ -12,12 +11,6 @@ import visualkeras
 
 def decay(epoch):
     return 1e-3
-    # if epoch < 3:
-    #     return 1e-3
-    # elif 3 <= epoch < 7:
-    #     return 1e-4
-    # else:
-    #     return 1e-5
 
 
 class Train:
@@ -54,7 +47,7 @@ class Train:
             generator=lambda: self.processed.generator(TYPE.train, self.model_name),
             output_types=(tf.float32, tf.float32),
             output_shapes=(
-                [self.batch_size, self.tensor_width, self.tensor_width] if self.model_name == "raw" else [self.batch_size, self.tensor_width],
+                [self.batch_size, self.tensor_width, self.tensor_width],
                 [None, 2]
             )
         )
@@ -62,16 +55,13 @@ class Train:
             generator=lambda: self.processed.generator(TYPE.validation, self.model_name),
             output_types=(tf.float32, tf.float32),
             output_shapes=(
-                [self.batch_size, self.tensor_width, self.tensor_width] if self.model_name == "raw" else [self.batch_size, self.tensor_width],
+                [self.batch_size, self.tensor_width, self.tensor_width],
                 [None, 2]
             )
         )
 
         # Model
-        if self.model_name == "raw":
-            model = ResNetv2(self.tensor_width, self.tensor_width, self.num_channel, self.model_width, problem_type=self.problem_type, output_nums=self.output_nums, pooling='max', dropout_rate=self.dropout_rate).ResNet18()
-        else:
-            model = MobileNet(self.tensor_width, self.num_channel, 32, problem_type=self.problem_type, output_nums=self.output_nums, pooling='max', dropout_rate=self.dropout_rate).MobileNet_v3_Large()
+        model = ResNetv2(self.tensor_width, self.tensor_width, self.num_channel, self.model_width, problem_type=self.problem_type, output_nums=self.output_nums, pooling='max', dropout_rate=self.dropout_rate).ResNet18()
 
         # Optimizer
         sgd = SGD(learning_rate=self.learning_rate, momentum=self.momentum)
@@ -92,15 +82,7 @@ class Train:
         tf.distribute.MirroredStrategy()
 
         model, sgd, cb, training_generator, validation_generator = self.build_model()
-
-        try:
-            visualkeras.layered_view(model, legend=True, to_file=self.save_location + 'model-layered.png')
-        except:
-            pass
-        try:
-            visualkeras.graph_view(model, to_file=self.save_location + 'model-graph.png')
-        except:
-            pass
+        visualkeras.layered_view(model, legend=True, to_file=self.save_location + 'model-layered.png')
 
         model.compile(
             loss='mean_squared_error',

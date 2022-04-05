@@ -141,7 +141,7 @@ class Evaluate:
                 self.labels = np.append(self.labels, np.array([i[1] for i in b[1][1]]))
                 res = np.append(res, self.model.predict_step(b[1]))
         res = res.reshape((len(self.processed.data[TYPE.test]) // self.batch_size) * self.batch_size, 2)
-        print(res)
+
         print("test loss, test acc:", results)
 
         self.predictions = res
