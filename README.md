@@ -160,13 +160,7 @@ single unified score.
 
 #### Results
 
-| Data Type  |  Model   | Detection Rate [P(X) > 0.5] | False Negatives | Processing Time / URL (ms) |
-|:----------:|:--------:|:---------------------------:|:---------------:|:--------------------------:|
-|   Benign   | Unified  |           0.99726           |       96        |           24.83            |
-| Defacement | Unified  |           0.99969           |       30        |           23.92            |
-|  Malware   | Unified  |           0.99715           |       33        |           24.42            |
-|  Phishing  | Unified  |           0.99809           |       19        |           27.97            |
-|    Spam    | Unified  |           0.83150           |      2022       |           31.99            |
+**TBA**
 
 ### Raw URL Analysis
 
@@ -209,13 +203,7 @@ For more details on the training, pre-processing, and model, please take a look 
 
 #### Results
 
-| Data Type  | Model | Detection Rate [P(X) > 0.5] | False Negatives |
-|:----------:|:-----:|:---------------------------:|:---------------:|
-|   Benign   |  Raw  |          0.956243           |      1548       |
-| Defacement |  Raw  |           0.99660           |       328       |
-|  Malware   |  Raw  |           0.98539           |       169       |
-|  Phishing  |  Raw  |           0.98916           |       108       |
-|    Spam    |  Raw  |           0.83633           |      1964       |
+**TBA**
 
 ### N-Gram URL Analysis
 
@@ -232,25 +220,7 @@ def build_pipeline(self):
 
 #### Results
 
-| Data Type  |  Model   | Detection Rate [P(X) > 0.5] | False Negatives |
-|:----------:|:--------:|:---------------------------:|:---------------:|
-|   Benign   | N-Gram 1 |           0.97959           |       722       |
-|   Benign   | N-Gram 2 |           0.99262           |       261       |
-|   Benign   | N-Gram 3 |           0.99895           |       37        |
-| Defacement | N-Gram 1 |           0.99980           |       19        |
-| Defacement | N-Gram 2 |           0.99928           |       69        |
-| Defacement | N-Gram 3 |          0.993740           |       604       |
-|  Malware   | N-Gram 1 |           0.99965           |        4        |
-|  Malware   | N-Gram 2 |           0.99533           |       54        |
-|  Malware   | N-Gram 3 |           0.97579           |       280       |
-|  Phishing  | N-Gram 1 |           0.99970           |        3        |
-|  Phishing  | N-Gram 2 |           0.95655           |       433       |
-|  Phishing  | N-Gram 3 |           0.74782           |      2513       |
-|    Spam    | N-Gram 1 |           0.83175           |      2019       |
-|    Spam    | N-Gram 2 |           0.17033           |      9956       |
-|    Spam    | N-Gram 3 |           0.16025           |      10077      |
-
-
+**TBA**
 
 ### Lexical URL Analysis
 
@@ -324,66 +294,19 @@ Bellow are the weightings of each feature, from greatest to smallest:
 
 #### Results
 
-| Data Type  |  Model  | Detection Rate [P(X) > 0.5] | False Negatives |
-|:----------:|:-------:|:---------------------------:|:---------------:|
-|   Benign   | Lexical |           0.99658           |       121       |
-| Defacement | Lexical |           0.96488           |      3388       |
-|  Malware   | Lexical |           0.99490           |       59        |
-|  Phishing  | Lexical |           0.96357           |       363       |
-|    Spam    | Lexical |           0.55917           |      5290       |
+**TBA**
 
 ## Results
 
 By leveraging the [ISCX-URL2016](https://www.unb.ca/cic/datasets/url-2016.html) **[2]** dataset, reports were generated for each of the CSVs which were *not* used to train the models:
 
-| Data Type  |  Model   | Detection Rate [P(X) > 0.5] | False Negatives | Processing Time / URL (ms) |
-|:----------:|:--------:|:---------------------------:|:---------------:|:--------------------------:|
-|   Benign   |   Raw    |          0.956243           |      1548       |            N/a             |
-|   Benign   | N-Gram 1 |           0.97959           |       722       |            N/a             |
-|   Benign   | N-Gram 2 |           0.99262           |       261       |            N/a             |
-|   Benign   | N-Gram 3 |           0.99895           |       37        |            N/a             |
-|   Benign   | Lexical  |           0.99658           |       121       |            N/a             |
-|   Benign   | Unified  |           0.99726           |       96        |           24.83            |
-| Defacement |   Raw    |           0.99660           |       328       |            N/a             |
-| Defacement | N-Gram 1 |           0.99980           |       19        |            N/a             |
-| Defacement | N-Gram 2 |           0.99928           |       69        |            N/a             |
-| Defacement | N-Gram 3 |          0.993740           |       604       |            N/a             |
-| Defacement | Lexical  |           0.96488           |      3388       |            N/a             |
-| Defacement | Unified  |           0.99969           |       30        |           23.92            |
-|  Malware   |   Raw    |           0.98539           |       169       |            N/a             |
-|  Malware   | N-Gram 1 |           0.99965           |        4        |            N/a             |
-|  Malware   | N-Gram 2 |           0.99533           |       54        |            N/a             |
-|  Malware   | N-Gram 3 |           0.97579           |       280       |            N/a             |
-|  Malware   | Lexical  |           0.99490           |       59        |            N/a             |
-|  Malware   | Unified  |           0.99715           |       33        |           24.42            |
-|  Phishing  |   Raw    |           0.98916           |       108       |            N/a             |
-|  Phishing  | N-Gram 1 |           0.99970           |        3        |            N/a             |
-|  Phishing  | N-Gram 2 |           0.95655           |       433       |            N/a             |
-|  Phishing  | N-Gram 3 |           0.74782           |      2513       |            N/a             |
-|  Phishing  | Lexical  |           0.96357           |       363       |            N/a             |
-|  Phishing  | Unified  |           0.99809           |       19        |           27.97            |
-|    Spam    |   Raw    |           0.83633           |      1964       |            N/a             |
-|    Spam    | N-Gram 1 |           0.83175           |      2019       |            N/a             |
-|    Spam    | N-Gram 2 |           0.17033           |      9956       |            N/a             |
-|    Spam    | N-Gram 3 |           0.16025           |      10077      |            N/a             |
-|    Spam    | Lexical  |           0.55917           |      5290       |            N/a             |
-|    Spam    | Unified  |           0.83150           |      2022       |           31.99            |
+**TBA**
 
-
-A more visual example of the data can be seen bellow:
-
-![img](https://bitb-detection.s3.amazonaws.com/models/url-detection/dataset/testing/results.png)
-
-_This image describes the density plots of all the "Unified" model results._
-
-Each category tends to have a fairly high conviction rate when making predictions other than "spam". This is also reflected
-in the overall accuracy of the combined models. This can likely be associated with the training datasets. Having had
-less exposure to spam URLs, the models are less capable of properly identifying malicious spam URLs.
 
 ## Future Improvements
 
-1. Improvement of spam URL / overall detection with better training datasets.
-2. Implementation of DNS feature extraction to enhance model detections (potentially improve spam URL detection).
+1. Improvement of overall detection with better training datasets.
+2. Implementation of DNS feature extraction to enhance model detections.
 
 ## References
 
