@@ -42,7 +42,7 @@ As a result, this raw URL analysis model, in combination with n-gram (1, 2, 3), 
 *`Please note that a pypi package will be published in the future. For now, please follow the instructions bellow.`*
 
 ```
-git clone <repo>
+git clone https://github.com/axelmierczuk/malicious-url-detection.git
 cd malicious-url-detection
 python3 -m venv ./venv
 source ./venv/bin/activate
