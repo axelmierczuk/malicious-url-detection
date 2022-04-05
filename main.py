@@ -91,13 +91,18 @@ class API:
             tmp.append(self.buildmatrix_lexical(url))
         res_lexical = np.array(self.model_lexical.predict_proba(tmp))[:, 1]
 
-        avg_ngram = np.add(np.add(res_ngram_1, res_ngram_2), res_ngram_3) / 3
-        final_arr = np.add(np.add(res_raw, avg_ngram), res_lexical) / 3
+        avg_ngram = []
+        for i in range(len(res_ngram_1)):
+            avg_ngram.append((res_ngram_1[i] + res_ngram_2[i] + res_ngram_3[i]) / 3)
+        
+        final_arr = []
+        for i in range(len(res_lexical)):
+            final_arr.append((res_raw[i] + avg_ngram[i] + res_lexical[i]) / 3)
 
         end = timer()
         print(f"Modeling executed in {end - start} seconds.")
 
-        return res_raw, res_ngram_1, res_ngram_2, res_ngram_3, res_lexical, final_arr
+        return res_raw, res_ngram_1, res_ngram_2, res_ngram_3, res_lexical, np.array(final_arr)
 
 
 def main(m, t, e, b, ep):
