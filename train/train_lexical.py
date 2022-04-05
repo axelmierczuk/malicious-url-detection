@@ -1,4 +1,6 @@
 import joblib
+import pandas as pd
+from matplotlib import pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 from util.util import TYPE, get_save_loc, Models
@@ -58,3 +60,12 @@ class Lexical:
             return
         if self.data is None:
             return
+        importances = self.model.feature_importances_
+        indices = np.argsort(importances)[::-1]
+        names = ['Subdomain', 'Len', 'IsPort', 'NumDigits', 'NumChars', 'PeriodChar', 'DashChar', 'AtChar', 'TidelChar', 'UnderscoreChar', 'PercentChar', 'AmpersandChar', 'HashChar', 'PathLen', 'DoubleSlash', 'QueryLen', 'Entropy']
+        plt.rcParams["figure.figsize"] = (12, 6)
+        plt.bar(range(17), importances[indices])
+        plt.xticks(range(17), names, rotation=20, fontsize=8)
+        plt.title("Feature Importance")
+        plt.savefig('data/test/importance-lexical.png')
+
