@@ -193,10 +193,10 @@ For more details on the training, pre-processing, and model, please take a look 
 
 #### Results
 
-| Data Type | Model | Detection Rate [P(X) > 0.5] | False Negatives | Processing Time / URL (ms) |
-|:---------:|:-----:|:---------------------------:|:---------------:|:--------------------------:|
-|  Benign   |  Raw  |             N/a             |       N/a       |                            |
-| Malicious |  Raw  |          0.936211           |      6662       |           28.52            |
+| Data Type | Model | Detection Rate [P(X) > 0.5] | False Negatives |
+|:---------:|:-----:|:---------------------------:|:---------------:|
+|  Benign   |  Raw  |             N/a             |       N/a       |                        
+| Malicious |  Raw  |          0.950823           |      5136       |
 
 
 ### N-Gram URL Analysis
@@ -297,8 +297,8 @@ Bellow are the weightings of each feature, from greatest to smallest:
 
 | Data Type |  Model  | Detection Rate [P(X) > 0.5] | False Negatives |
 |:---------:|:-------:|:---------------------------:|:---------------:|
-|  Benign   | Lexical  |             N/a             |       N/a      |
-| Malicious | Lexical  |          0.540889           |      47957     |
+|  Benign   | Lexical  |             N/a            |       N/a      |
+| Malicious | Lexical  |          0.540889          |      47957     |
 
 ## Results
 
