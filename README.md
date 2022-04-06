@@ -149,12 +149,6 @@ Malicioussness Score = α + ε + [(β + γ + δ) / 3]
 This scoring model averages the scores from N-Gram-1,2,3 and adds it to the Raw URL score, and Lexical Score to provide a 
 single unified score.
 
-#### Results
-
-| Data Type |  Model   | Detection Rate [P(X) > 0.5] | False Negatives | Processing Time / URL (ms) |
-|:---------:|:--------:|:---------------------------:|:---------------:|:--------------------------:|
-| Malicious | Unified  |          0.936210           |      6662       |           28.52            |
-
 
 ### Raw URL Analysis
 
@@ -195,13 +189,6 @@ For more details on the training, pre-processing, and model, please take a look 
 
 ```
 
-#### Results
-
-| Data Type | Model | Detection Rate [P(X) > 0.5] | False Negatives |
-|:---------:|:-----:|:---------------------------:|:---------------:|
-| Malicious |  Raw  |          0.950823           |      5136       |
-
-
 ### N-Gram URL Analysis
 
 #### Overview
@@ -214,14 +201,6 @@ def build_pipeline(self):
     print("Building pipeline.")
     return Pipeline([('vect', CountVectorizer(ngram_range=(self.ngram, self.ngram))), ('tfidf', TfidfTransformer()), ('clf', RandomForestClassifier(max_depth=10000, random_state=0))])
 ```
-
-#### Results
-
-| Data Type |  Model   | Detection Rate [P(X) > 0.5] | False Negatives |
-|:---------:|:--------:|:---------------------------:|:---------------:|
-| Malicious | N-Gram 1 |          0.992655           |       767       |
-| Malicious | N-Gram 2 |          0.538769           |      48170      |
-| Malicious | N-Gram 3 |          0.205413           |      82985      |
 
 ### Lexical URL Analysis
 
@@ -292,26 +271,6 @@ Bellow are the weightings of each feature, from greatest to smallest:
 
 
 ![img](https://bitb-detection.s3.amazonaws.com/models/url-detection/lexical/importance-lexical.png)
-
-#### Results
-
-| Data Type |  Model  | Detection Rate [P(X) > 0.5] | False Negatives |
-|:---------:|:-------:|:---------------------------:|:---------------:|
-| Malicious | Lexical  |          0.540889          |      47957      |
-
-## Results
-
-By leveraging [this](https://www.kaggle.com/datasets/siddharthkumar25/malicious-and-benign-urls) **[2]** dataset, reports were generated for each of the CSVs which were *not* used to train the models:
-
-| Data Type |  Model   | Detection Rate [P(X) > 0.5] | False Negatives | Processing Time / URL (ms) |
-|:---------:|:--------:|:---------------------------:|:---------------:|:--------------------------:|
-| Malicious |   Raw    |          0.950823           |      5136       |            N/a             |
-| Malicious | N-Gram 1 |          0.992655           |       767       |            N/a             |
-| Malicious | N-Gram 2 |          0.538769           |      48170      |            N/a             |
-| Malicious | N-Gram 3 |          0.205413           |      82985      |            N/a             |
-| Malicious | Lexical  |          0.540889           |      47957      |            N/a             |
-| Malicious | Unified  |          0.936210           |      6662       |           28.52            |
-
 
 
 ## Future Improvements
