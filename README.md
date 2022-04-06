@@ -99,7 +99,7 @@ api.set_urls(['www.google.com'])
 # Get model predictions
 res_raw, res_ngram_1, res_ngram_2, res_ngram_3, res_lexical, final_arr = api.make_predictions()
 
-# Build report - will output to data/google-analysis.csv
+# Build report - will output to data/report-google-analysis.csv
 api.build_report("data", "google-analysis")
 ```
 
