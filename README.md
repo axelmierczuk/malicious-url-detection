@@ -146,7 +146,11 @@ single unified score.
 
 #### Results
 
-**TBA**
+| Data Type |  Model   | Detection Rate [P(X) > 0.5] | False Negatives | Processing Time / URL (ms) |
+|:---------:|:--------:|:---------------------------:|:---------------:|:--------------------------:|
+|  Benign   | Unified  |             N/a             |       N/a       |            N/a             |
+| Malicious | Unified  |          0.936210           |      6662       |           28.52            |
+
 
 ### Raw URL Analysis
 
