@@ -123,7 +123,7 @@ The following dataset was used to test the models:
 
 - https://www.kaggle.com/datasets/siddharthkumar25/malicious-and-benign-urls **[2]**
 
-*`It seems like the models that were trained may have been over fit. Results may not be optimal`*
+*`It seems like the models that were trained may have been over fit. Results may not be optimal.`*
 
 ## Models
 
