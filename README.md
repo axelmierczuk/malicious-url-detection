@@ -71,6 +71,8 @@ For information on training / evaluating models:
 python3 main.py -h
 ```
 
+Training models will require you to change the csv file locations that the models use yourself. These can be found in the `preprocess/format.csv` file, line 151. There may be other changes based on your data.
+
 The `PoC.py` file leverages the `API` class imported from `main.py` to analyze URLs with pre-trained models. 
 
 To build a report from existing datasets:
