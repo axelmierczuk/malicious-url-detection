@@ -53,6 +53,8 @@ As a result, this raw URL analysis model, in combination with n-gram (1, 2, 3), 
 
 *`Please note that a pypi package will be published in the future. For now, please follow the instructions bellow.`*
 
+*`IMPORTANT: Some users have reported not being able to install tensorflow==2.8.0. Please make sure your system meets the requirements [here](https://exerror.com/no-matching-distribution-found-for-tensorflow/)`*
+
 ```
 git clone https://github.com/axelmierczuk/malicious-url-detection.git
 cd malicious-url-detection
