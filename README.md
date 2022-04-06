@@ -98,7 +98,7 @@ api.set_urls(['www.google.com'])
 res_raw, res_ngram_1, res_ngram_2, res_ngram_3, res_lexical, final_arr = api.make_predictions()
 
 # Build report - will output to data/google-analysis.csv
-api.build_report("data/", "google-analysis")
+api.build_report("data", "google-analysis")
 ```
 
 ## Datasets
