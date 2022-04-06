@@ -30,7 +30,7 @@ import pandas as pd
 
 def main(is_report):
     # MALICIOUS / BENIGN URLs (NOT used in training)
-    # https://www.unb.ca/cic/datasets/url-2016.html
+    # https://www.kaggle.com/datasets/siddharthkumar25/malicious-and-benign-urls
     csv_list = ["data/test/benign-urldata.csv", "data/test/malicious-urldata.csv"]
 
     # Load models
