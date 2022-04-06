@@ -106,22 +106,11 @@ class API:
             fieldnames = ['num_items', 'execution_time (s)', 'execution_time_per_url (ms)', 'detection_accuracy', 'false_negative']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
-            if name == "benign-urldata":
-                writer.writerow({
-                    'num_items': len(self.urls),
-                    'execution_time (s)': '{0:.2f}'.format(end - start),
-                    'execution_time_per_url (ms)': '{0:.2f}'.format((end - start) / len(self.urls) * 1000),
-                    'detection_accuracy': '{0:.6f}'.format(np.count_nonzero(np.where(np.array(pd_df['final_benign_scores']) > 0.5)[0]) / len(pd_df['final_benign_scores'])),
-                    'false_negative': '{0:.2f}'.format(np.count_nonzero(np.where(np.array(pd_df['final_benign_scores']) <= 0.5)[0]) / len(pd_df['final_benign_scores']))
-                })
-            else:
-                writer.writerow({
-                    'num_items': len(self.urls),
-                    'execution_time (s)': '{0:.2f}'.format(end - start),
-                    'execution_time_per_url (ms)': '{0:.2f}'.format((end - start) / len(self.urls) * 1000),
-                    'detection_accuracy': '{0:.6f}'.format(np.count_nonzero(np.where(np.array(pd_df['final_malicious_scores']) > 0.5)[0]) / len(pd_df['final_malicious_scores'])),
-                    'false_negative': '{0:.2f}'.format(np.count_nonzero(np.where(np.array(pd_df['final_malicious_scores']) <= 0.5)[0]) / len(pd_df['final_malicious_scores']))
-                })
+            writer.writerow({
+                'num_items': len(self.urls),
+                'execution_time (s)': '{0:.2f}'.format(end - start),
+                'execution_time_per_url (ms)': '{0:.2f}'.format((end - start) / len(self.urls) * 1000)
+            })
             writer.writerow({})
         pd.DataFrame.from_dict(pd_df).to_csv(save_location + "/report-" + name + ".csv", index=False, mode='a')
 
