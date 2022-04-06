@@ -148,7 +148,6 @@ single unified score.
 
 | Data Type |  Model   | Detection Rate [P(X) > 0.5] | False Negatives | Processing Time / URL (ms) |
 |:---------:|:--------:|:---------------------------:|:---------------:|:--------------------------:|
-|  Benign   | Unified  |             N/a             |       N/a       |            N/a             |
 | Malicious | Unified  |          0.936210           |      6662       |           28.52            |
 
 
@@ -195,7 +194,6 @@ For more details on the training, pre-processing, and model, please take a look 
 
 | Data Type | Model | Detection Rate [P(X) > 0.5] | False Negatives |
 |:---------:|:-----:|:---------------------------:|:---------------:|
-|  Benign   |  Raw  |             N/a             |       N/a       |                        
 | Malicious |  Raw  |          0.950823           |      5136       |
 
 
@@ -216,9 +214,6 @@ def build_pipeline(self):
 
 | Data Type |  Model   | Detection Rate [P(X) > 0.5] | False Negatives |
 |:---------:|:--------:|:---------------------------:|:---------------:|
-|  Benign   | N-Gram 1 |             N/a             |       N/a       |
-|  Benign   | N-Gram 2 |             N/a             |       N/a       |
-|  Benign   | N-Gram 3 |             N/a             |       N/a       |
 | Malicious | N-Gram 1 |          0.992655           |       767       |
 | Malicious | N-Gram 2 |          0.538769           |      48170      |
 | Malicious | N-Gram 3 |          0.205413           |      82985      |
@@ -297,8 +292,7 @@ Bellow are the weightings of each feature, from greatest to smallest:
 
 | Data Type |  Model  | Detection Rate [P(X) > 0.5] | False Negatives |
 |:---------:|:-------:|:---------------------------:|:---------------:|
-|  Benign   | Lexical  |             N/a            |       N/a      |
-| Malicious | Lexical  |          0.540889          |      47957     |
+| Malicious | Lexical  |          0.540889          |      47957      |
 
 ## Results
 
@@ -306,12 +300,6 @@ By leveraging [this](https://www.kaggle.com/datasets/siddharthkumar25/malicious-
 
 | Data Type |  Model   | Detection Rate [P(X) > 0.5] | False Negatives | Processing Time / URL (ms) |
 |:---------:|:--------:|:---------------------------:|:---------------:|:--------------------------:|
-|  Benign   |   Raw    |             N/a             |       N/a       |            N/a             |
-|  Benign   | N-Gram 1 |             N/a             |       N/a       |            N/a             |
-|  Benign   | N-Gram 2 |             N/a             |       N/a       |            N/a             |
-|  Benign   | N-Gram 3 |             N/a             |       N/a       |            N/a             |
-|  Benign   | Lexical  |             N/a             |       N/a       |            N/a             |
-|  Benign   | Unified  |             N/a             |       N/a       |            N/a             |
 | Malicious |   Raw    |          0.950823           |      5136       |            N/a             |
 | Malicious | N-Gram 1 |          0.992655           |       767       |            N/a             |
 | Malicious | N-Gram 2 |          0.538769           |      48170      |            N/a             |
