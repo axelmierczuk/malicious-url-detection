@@ -14,11 +14,13 @@ setup-data-test:
 	cd data/test && wget https://bitb-detection.s3.amazonaws.com/models/url-detection/dataset/benign-urldata.csv && wget https://bitb-detection.s3.amazonaws.com/models/url-detection/dataset/malicious-urldata.csv
 
 setup-ngram:
-	-mkdir models && mkdir models/ngram
+	-mkdir models 
+	mkdir models/ngram
 	cd models/ngram && wget https://bitb-detection.s3.amazonaws.com/models/url-detection/ngram/ngram-1.joblib && wget https://bitb-detection.s3.amazonaws.com/models/url-detection/ngram/ngram-2.joblib && wget https://bitb-detection.s3.amazonaws.com/models/url-detection/ngram/ngram-3.joblib
 
 setup-lexical:
-	-mkdir models && mkdir models/lexical
+	-mkdir models
+	mkdir models/lexical
 	cd models/lexical && wget https://bitb-detection.s3.amazonaws.com/models/url-detection/lexical/lexical-forest.joblib
 
 setup-raw:
