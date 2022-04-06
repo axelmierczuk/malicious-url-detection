@@ -106,7 +106,7 @@ class API:
             fieldnames = ['num_items', 'execution_time (s)', 'execution_time_per_url (ms)', 'detection_accuracy', 'false_negative']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
-            if name == "benign":
+            if name == "benign-urldata":
                 writer.writerow({
                     'num_items': len(self.urls),
                     'execution_time (s)': '{0:.2f}'.format(end - start),
