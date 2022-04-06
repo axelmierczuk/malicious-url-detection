@@ -119,22 +119,8 @@ A 80/10/10 split was used with this dataset to train, validate, and test, respec
 The following dataset was used to test the models:
 
 
-- ~~https://www.unb.ca/cic/datasets/url-2016.html **[2]**~~
+- https://www.kaggle.com/datasets/siddharthkumar25/malicious-and-benign-urls **[2]**
 
-EDIT: This testing dataset contains URLs from the training dataset. I will be updating results once I generate a report. So far, these are the 
-results from the dataset found [here](https://www.kaggle.com/datasets/siddharthkumar25/malicious-and-benign-urls):
-
-```
-Modeling executed in 2514.361137835 seconds.
-DATASET - data/test/urldata.csv
-URL Count - 104438
-(Model - raw) Detected 95.08% accurately
-(Model - ngram_1) Detected 99.26% accurately
-(Model - ngram_2) Detected 53.88% accurately
-(Model - ngram_3) Detected 20.54% accurately
-(Model - lexical) Detected 54.08% accurately
-(Model - final) Detected 93.62% accurately
-```
 
 ## Models
 
@@ -203,7 +189,11 @@ For more details on the training, pre-processing, and model, please take a look 
 
 #### Results
 
-**TBA**
+| Data Type | Model | Detection Rate [P(X) > 0.5] | False Negatives | Processing Time / URL (ms) |
+|:---------:|:-----:|:---------------------------:|:---------------:|:--------------------------:|
+|  Benign   |  Raw  |             N/a             |       N/a       |                            |
+| Malicious |  Raw  |          0.936211           |      6662       |           28.52            |
+
 
 ### N-Gram URL Analysis
 
@@ -220,7 +210,14 @@ def build_pipeline(self):
 
 #### Results
 
-**TBA**
+| Data Type |  Model   | Detection Rate [P(X) > 0.5] | False Negatives |
+|:---------:|:--------:|:---------------------------:|:---------------:|
+|  Benign   | N-Gram 1 |             N/a             |       N/a       |
+|  Benign   | N-Gram 2 |             N/a             |       N/a       |
+|  Benign   | N-Gram 3 |             N/a             |       N/a       |
+| Malicious | N-Gram 1 |          0.992655           |       767       |
+| Malicious | N-Gram 2 |          0.538769           |      48170      |
+| Malicious | N-Gram 3 |          0.205413           |      82985      |
 
 ### Lexical URL Analysis
 
@@ -294,13 +291,30 @@ Bellow are the weightings of each feature, from greatest to smallest:
 
 #### Results
 
-**TBA**
+| Data Type |  Model  | Detection Rate [P(X) > 0.5] | False Negatives |
+|:---------:|:-------:|:---------------------------:|:---------------:|
+|  Benign   | Lexical  |             N/a             |       N/a      |
+| Malicious | Lexical  |          0.540889           |      47957     |
 
 ## Results
 
 By leveraging [this](https://www.kaggle.com/datasets/siddharthkumar25/malicious-and-benign-urls) **[2]** dataset, reports were generated for each of the CSVs which were *not* used to train the models:
 
-**TBA**
+| Data Type |  Model   | Detection Rate [P(X) > 0.5] | False Negatives | Processing Time / URL (ms) |
+|:---------:|:--------:|:---------------------------:|:---------------:|:--------------------------:|
+|  Benign   |   Raw    |             N/a             |       N/a       |            N/a             |
+|  Benign   | N-Gram 1 |             N/a             |       N/a       |            N/a             |
+|  Benign   | N-Gram 2 |             N/a             |       N/a       |            N/a             |
+|  Benign   | N-Gram 3 |             N/a             |       N/a       |            N/a             |
+|  Benign   | Lexical  |             N/a             |       N/a       |            N/a             |
+|  Benign   | Unified  |             N/a             |       N/a       |            N/a             |
+| Malicious |   Raw    |          0.950823           |      5136       |            N/a             |
+| Malicious | N-Gram 1 |          0.992655           |       767       |            N/a             |
+| Malicious | N-Gram 2 |          0.538769           |      48170      |            N/a             |
+| Malicious | N-Gram 3 |          0.205413           |      82985      |            N/a             |
+| Malicious | Lexical  |          0.540889           |      47957      |            N/a             |
+| Malicious | Unified  |          0.936210           |      6662       |           28.52            |
+
 
 
 ## Future Improvements
