@@ -71,7 +71,35 @@ For information on training / evaluating models:
 python3 main.py -h
 ```
 
-Training models will require you to change the csv file locations that the models use yourself. These can be found in the `preprocess/format.csv` file, line 151. There may be other changes based on your data.
+Training models will require you to change the csv file locations that the models use yourself. These can be found in 
+the `preprocess/format.csv` file, line 151. There may be other changes based on your data. 
+
+_In order to train the lexical model, please ensure your CSV has the following columns:_
+
+| Column        |                  Description                   |
+|  :----:       |:----------------------------------------------:|
+| Subdomain     |       1 if subdomain exists, 0 otherwise       |
+| Len           |                 Length of URL                  |
+| IsPort        | 0 if port not specified, port number otherwise |
+| NumDigits     |          Number of digits in the URL           |
+| NumChars      |     Number of alpha characters in the URL      |
+| PeriodChar    |      Number of '.' characters in the URL       |
+| DashChar      |      Number of '-' characters in the URL       |
+| TidelChar     |      Number of '~' characters in the URL       |
+| AtChar        |      Number of '@' characters in the URL       |
+| UnderscoreChar|      Number of '_' characters in the URL       |
+| PercentChar   |      Number of '%' characters in the URL       |
+| AmpersandChar |      Number of '&' characters in the URL       |
+| HashChar      |      Number of '#' characters in the URL       |
+| PathLen       |                 Length of path                 |
+| DoubleSlash   |      1 if '//' exists in URL, 0 otherwise      |
+| QueryLen      |                Length of query                 |
+| Entropy       |             Shannon entropy of URL             |
+| url           |                    Raw URL                     |
+| label         |            0 if benign, 1 otherwise            |
+
+For training other models, a regular CSV with the `url` and `label` columns will work. Some sample code is provided in the 
+`preprocess/format.csv` file, as well as in this README for processing your dataset.
 
 The `PoC.py` file leverages the `API` class imported from `main.py` to analyze URLs with pre-trained models. 
 
